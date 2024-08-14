@@ -2,14 +2,30 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpToys.Snowflake
+namespace SharpToys.Snowflake;
+
+public class SnowflakeIdOption
 {
-    public class SnowflakeIdOption
+    public long DatacenterId { get; init; }
+
+    public long WorkerId { get; init; }
+
+    public DateTimeOffset StartDate { get; private set; }
+
+
+    public SnowflakeIdOption()
     {
-        public long DatacenterId { get; init; }
+        StartDate = DateTimeOffset.UnixEpoch;
+    }
 
-        public long WorkerId { get; init; }
+    public SnowflakeIdOption(DateTimeOffset dateTime)
+    {
+        StartDate = dateTime;
+    }
 
-        public DateTime StartDateTimeUtc { get; set; } = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+    public long GetTicks()
+    {
+        return StartDate.UtcTicks;
     }
 }

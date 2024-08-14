@@ -96,7 +96,7 @@ public class SnowflakeIdGenerator
 
     protected long GetTimeStamp()
     {
-        return (DateTime.UtcNow.Ticks - _option.StartDateTimeUtc.Ticks) / 10000;
+        return (DateTime.UtcNow.Ticks - _option.GetTicks()) / 10000;
     }
 
 }
