@@ -6,26 +6,33 @@ namespace SharpToys.Snowflake;
 
 public class SnowflakeIdOption
 {
+    public readonly long _startDateUtcTicks;
+
+
     public long DatacenterId { get; init; }
 
     public long WorkerId { get; init; }
 
-    public DateTimeOffset StartDate { get; private set; }
+    public DateTimeOffset StartDateUtc => new(_startDateUtcTicks, TimeSpan.Zero);
 
 
     public SnowflakeIdOption()
     {
-        StartDate = DateTimeOffset.UnixEpoch;
+        _startDateUtcTicks = DateTimeOffset.UnixEpoch.UtcTicks;
+    }
+
+    public SnowflakeIdOption(long utcTicks)
+    {
+        _startDateUtcTicks = utcTicks;
     }
 
     public SnowflakeIdOption(DateTimeOffset dateTime)
     {
-        StartDate = dateTime;
+        _startDateUtcTicks = dateTime.UtcTicks;
     }
-
 
     public long GetTicks()
     {
-        return StartDate.UtcTicks;
+        return _startDateUtcTicks;
     }
 }

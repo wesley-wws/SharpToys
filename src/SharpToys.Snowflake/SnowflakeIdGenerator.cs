@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SharpToys.Snowflake;
 
-public class SnowflakeIdGenerator
+public sealed class SnowflakeIdGenerator
 {
     private const int _workerIdBitsLength = 5;
 
@@ -48,6 +48,7 @@ public class SnowflakeIdGenerator
         _option = option;
     }
 
+
     public long Next()
     {
         lock (_lock)
@@ -84,7 +85,8 @@ public class SnowflakeIdGenerator
         }
     }
 
-    protected long TilNextMillis(long lastTimestamp)
+
+    private long TilNextMillis(long lastTimestamp)
     {
         var timestamp = GetTimeStamp();
         while (timestamp <= lastTimestamp)
@@ -94,7 +96,7 @@ public class SnowflakeIdGenerator
         return timestamp;
     }
 
-    protected long GetTimeStamp()
+    private long GetTimeStamp()
     {
         return (DateTime.UtcNow.Ticks - _option.GetTicks()) / 10000;
     }
