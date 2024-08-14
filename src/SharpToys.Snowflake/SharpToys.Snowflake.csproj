@@ -5,6 +5,13 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 		<Nullable>enable</Nullable>
+
+		<!-- Package -->
+		<Title>Snowflake C#</Title>
+		<Authors>Wesley</Authors>
+		<PackageProjectUrl>https://github.com/wesley-wws/SharpToys</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/wesley-wws/SharpToys</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>
