@@ -2,8 +2,7 @@
 
 name: Release SharpToys.Snowflake
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
+# Controls when the action will run. Workflow runs when manually triggered using the UI or API.
 on:
   workflow_dispatch:
     # Inputs the workflow accepts.
@@ -17,7 +16,12 @@ on:
         required: true
         # The data type of the input
         type: string
-
+        
+defaults:
+  run:
+    shell: bash
+    working-directory: ./src/SharpToys.Snowflake
+    
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   release:
@@ -32,11 +36,11 @@ jobs:
       with:
         dotnet-version: 8.x
     - name: Build
-      run: dotnet build SharpToys.Snowflake.csproj --configuration Release /p:Version=${{inputs.version}}
+      run: dotnet build --configuration Release /p:Version=${{inputs.version}}
     - name: Test
-      run: dotnet test SharpToys.Snowflake.csproj --configuration Release /p:Version=${{inputs.version}} --no-build
+      run: dotnet test --configuration Release /p:Version=${{inputs.version}} --no-build
     - name: Pack
-      run: dotnet pack SharpToys.Snowflake.csproj --configuration Release /p:Version=${{inputs.version}} --no-build --output .
+      run: dotnet pack --configuration Release /p:Version=${{inputs.version}} --no-build --output .
     - name: Push
       run: dotnet nuget push NuGet.Workflow.${inputs.version}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${GITHUB_TOKEN}
       env:
