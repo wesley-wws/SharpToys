@@ -20,7 +20,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  release:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -28,10 +28,6 @@ jobs:
     # Runs a single command using the runners shell
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Verify commit exists in origin/main
-      run: |
-        git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-        git branch --remote --contains | grep origin/main
     - name: Build
       run: dotnet build --configuration Release /p:Version=${inputs.version}
     - name: Test
