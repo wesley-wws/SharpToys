@@ -44,6 +44,6 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release /p:Version=${{inputs.version}} --no-build --output .
     - name: Push
-      run: dotnet nuget push $project_name.${{inputs.version}}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${NUGET_TOKEN}
+      run: dotnet nuget push $project_name.${{inputs.version}}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_TOKEN}
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
