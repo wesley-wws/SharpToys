@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      name:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
+      version:
+        # Friendly description to be shown in the UI instead of 'version'
+        description: 'Version'
         # Default value if no value is explicitly provided
-        default: 'World'
+        default: ''
         # Input has to be provided for the workflow to run
         required: true
         # The data type of the input
@@ -20,13 +20,25 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  greet:
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    timeout-minutes: 15
     steps:
     # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}"
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Verify commit exists in origin/main
+      run: |
+        git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+        git branch --remote --contains | grep origin/main
+    - name: Build
+      run: dotnet build --configuration Release /p:Version=${inputs.version}
+    - name: Test
+      run: dotnet test --configuration Release /p:Version=${inputs.version} --no-build
+    - name: Pack
+      run: dotnet pack --configuration Release /p:Version=${inputs.version} --no-build --output .
+    - name: Push
+      run: dotnet nuget push NuGet.Workflow.${inputs.version}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${GITHUB_TOKEN}
+      env:
+        GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
