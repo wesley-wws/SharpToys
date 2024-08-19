@@ -29,11 +29,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Build
-      run: dotnet build --configuration Release /p:Version=${inputs.version}
+      run: dotnet build ./src/SharpToys.Snowflake/SharpToys.Snowflake.csproj --configuration Release /p:Version=${inputs.version}
     - name: Test
-      run: dotnet test --configuration Release /p:Version=${inputs.version} --no-build
+      run: dotnet test ./src/SharpToys.Snowflake/SharpToys.Snowflake.csproj --configuration Release /p:Version=${inputs.version} --no-build
     - name: Pack
-      run: dotnet pack --configuration Release /p:Version=${inputs.version} --no-build --output .
+      run: dotnet pack ./src/SharpToys.Snowflake/SharpToys.Snowflake.csproj --configuration Release /p:Version=${inputs.version} --no-build --output .
     - name: Push
       run: dotnet nuget push NuGet.Workflow.${inputs.version}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${GITHUB_TOKEN}
       env:
