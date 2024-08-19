@@ -23,7 +23,7 @@ env:
 defaults:
   run:
     shell: bash
-    working-directory: "./src/$project_name"
+    working-directory: ./src/SharpToys.Snowflake
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
