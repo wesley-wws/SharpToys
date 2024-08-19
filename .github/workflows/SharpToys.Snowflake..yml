@@ -16,11 +16,14 @@ on:
         required: true
         # The data type of the input
         type: string
-        
+
+env:
+  project_name: SharpToys.Snowflake
+
 defaults:
   run:
     shell: bash
-    working-directory: ./src/SharpToys.Snowflake
+    working-directory: ./src/${{env.project_name}}
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -42,6 +45,6 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release /p:Version=${{inputs.version}} --no-build --output .
     - name: Push
-      run: dotnet nuget push NuGet.Workflow.${{inputs.version}}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${GITHUB_TOKEN}
+      run: dotnet nuget push ${{env.project_name}}.${{inputs.version}}.nupkg --source https://nuget.pkg.github.com/acraven/index.json --api-key ${GITHUB_TOKEN}
       env:
         GITHUB_TOKEN: ${{ secrets.NUGET_TOKEN }}
