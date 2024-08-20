@@ -10,5 +10,5 @@ var generator = new SnowflakeIdGenerator(new SnowflakeIdOption(DateTimeOffset.Ut
     WorkerId = SnowflakeIdGenerator.MinWorkerId
 });
 
-generator.Next();
+var id = generator.Next();
 ```
