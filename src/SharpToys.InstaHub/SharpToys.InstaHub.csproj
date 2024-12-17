@@ -8,8 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Autofac" />
 	  <PackageReference Include="CommunityToolkit.Diagnostics" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SharpToys.Easyflect\SharpToys.Easyflect.csproj" />
 	</ItemGroup>
 
 </Project>
