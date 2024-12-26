@@ -9,7 +9,7 @@ namespace SharpToys.Easyflect;
 
 public static class EasyReflect
 {
-    public static void TraverseLoadTypes(Action<Assembly, Type> action, Predicate<Assembly>? assemblyFilter = null)
+    public static void TraverseLoadedTypes(Action<Assembly, Type> action, Predicate<Assembly>? assemblyFilter = null)
     {
         // Get all currently loaded assemblies in the application domain
         IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies();

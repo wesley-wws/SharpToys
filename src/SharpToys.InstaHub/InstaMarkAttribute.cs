@@ -28,7 +28,7 @@ public abstract class InstaMarkAttribute : Attribute
         // Initialize a dictionary to hold types with InstaMarkAttribute
         var instaMark_Type = new Dictionary<InstaMarkAttribute, Type>();
 
-        EasyReflect.TraverseLoadTypes((a, t) =>
+        EasyReflect.TraverseLoadedTypes((a, t) =>
         {
             if (!t.IsClass || !t.IsPublic || t.IsAbstract)
             {
