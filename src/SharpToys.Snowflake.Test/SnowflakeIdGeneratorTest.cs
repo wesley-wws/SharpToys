@@ -5,6 +5,8 @@ namespace SharpToys.Snowflake.Test;
 
 public class SnowflakeIdGeneratorTest
 {
+    #region Constructor Tests
+    
     [Theory]
     [InlineData(SnowflakeIdGenerator.MinWorkerId, SnowflakeIdGenerator.MinDatacenterId, true)]
     [InlineData(SnowflakeIdGenerator.MaxWorkerId, SnowflakeIdGenerator.MaxDatacenterId, true)]
@@ -34,6 +36,17 @@ public class SnowflakeIdGeneratorTest
         }
     }
 
+    [Fact]
+    public void Constructor_NullOption_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => new SnowflakeIdGenerator(null!));
+    }
+    
+    #endregion
+
+    #region Next Method Tests
+    
     [Fact]
     public void Next_ShortTime_NoDuplicates()
     {
@@ -92,4 +105,118 @@ public class SnowflakeIdGeneratorTest
             return list;
         }
     }
+    
+    [Fact]
+    public void Next_WithDifferentWorkerIds_GeneratesDifferentIds()
+    {
+        // Arrange
+        var generator1 = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 1,
+            DatacenterId = 1,
+        });
+        
+        var generator2 = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 2,
+            DatacenterId = 1,
+        });
+
+        // Act
+        var id1 = generator1.Next();
+        var id2 = generator2.Next();
+
+        // Assert
+        Assert.NotEqual(id1, id2);
+    }
+
+    [Fact]
+    public void Next_WithDifferentDatacenterIds_GeneratesDifferentIds()
+    {
+        // Arrange
+        var generator1 = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 1,
+            DatacenterId = 1,
+        });
+        
+        var generator2 = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 1,
+            DatacenterId = 2,
+        });
+
+        // Act
+        var id1 = generator1.Next();
+        var id2 = generator2.Next();
+
+        // Assert
+        Assert.NotEqual(id1, id2);
+    }
+    
+    #endregion
+
+    #region NextBatch Method Tests
+    
+    [Theory]
+    [InlineData(1)]
+    [InlineData(10)]
+    [InlineData(100)]
+    public void NextBatch_ReturnsCorrectNumberOfUniqueIds(int batchSize)
+    {
+        // Arrange
+        var generator = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 1,
+            DatacenterId = 1,
+        });
+
+        // Act
+        var ids = generator.NextBatch(batchSize);
+
+        // Assert
+        Assert.Equal(batchSize, ids.Length);
+        Assert.Equal(batchSize, ids.Distinct().Count());
+    }
+
+    [Fact]
+    public void NextBatch_WithInvalidCount_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var generator = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 1,
+            DatacenterId = 1,
+        });
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => generator.NextBatch(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => generator.NextBatch(-1));
+    }
+
+    [Fact]
+    public void NextBatch_ComparedToIndividualCalls_GeneratesSameNumberOfIds()
+    {
+        // Arrange
+        var generator = new SnowflakeIdGenerator(new SnowflakeIdOption
+        {
+            WorkerId = 1,
+            DatacenterId = 1,
+        });
+        int count = 50;
+
+        // Act
+        var batchIds = generator.NextBatch(count);
+        var individualIds = new List<long>(count);
+        for (int i = 0; i < count; i++)
+        {
+            individualIds.Add(generator.Next());
+        }
+
+        // Assert
+        Assert.Equal(count, batchIds.Length);
+        Assert.Equal(count, individualIds.Count);
+    }
+    
+    #endregion
 }
